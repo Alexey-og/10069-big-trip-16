@@ -1,3 +1,7 @@
+import dayjs from 'dayjs';
+const duration = require('dayjs/plugin/duration');
+dayjs.extend(duration);
+
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
 export const getRandomInteger = (a = 0, b = 1) => {
@@ -27,7 +31,7 @@ export const getRandomFloatInRange = (min, max, digitsAfterDecpoint = 0) => (
  * @param {array} array — исходный массив
  * @return {array} — итоговый массив
  */
-const shuffleArray = (array) => {
+export const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     const temp = array[i];
@@ -58,17 +62,6 @@ export const getRandomArrayElement = (array) => (
 
 
 /**
- * Получение случайного элемента массива
- * @param {number} width — минимальное значение
- * @param {number} height — максимальное значение
- * @return {string|number|object} — значение массива со случайным индексом
- */
-export const getRandomImageUrl = (width, height) => (
-  `https://picsum.photos/${width}/${height}`
-);
-
-
-/**
  * Получение случайного элемента объекта
  * @param {object} object — исходный объект
  * @return {string|number|object} — значение объекта со случайным ключом
@@ -86,4 +79,81 @@ export const getRandomObjectValue = (object) => (
  */
 export const getRandomDate = (start, end = new Date()) => (
   new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
+);
+
+
+/**
+ * Показ отформатированной даты
+ * @param {date} time — дата в универсальном формате
+ * @param {string} format — формат для отображения даты
+ * @return {date} — итоговая отформатированная дата
+ */
+export const showFormattedTime = (time, format) => {
+  return dayjs(time).format(format);
+};
+
+
+/**
+ * Показ отформатированной продолжительности события
+ * @param {date} startTime — время начала события
+ * @param {date} endTime — время завершения события
+ * @return {string} — строка с продолжительностью события
+ */
+export const showDuration = (startTime, endTime) => {
+  const duration = dayjs(endTime).diff(dayjs(startTime));
+  const days = dayjs.duration(duration).days();
+  const hours = dayjs.duration(duration).hours();
+  const minutes = dayjs.duration(duration).minutes();
+  const seconds = dayjs.duration(duration).seconds();
+
+  let daysString = '';
+  let hoursString = '';
+  let minutesString = '';
+  let secondsString = '';
+
+  if (days > 9) {daysString = `${days}D`} 
+    else if (days > 0 && days <= 9) {daysString = `0${days}D`};
+
+  if (hours > 9) {hoursString = ` ${hours}H`} 
+    else if (hours > 0 && hours <= 9) {hoursString = ` 0${hours}H`};
+
+  if (minutes > 9) {minutesString = ` ${minutes}M`} 
+    else if (minutes > 0 && minutes <= 9) {minutesString = ` 0${minutes}M`};
+
+  if (seconds > 9) {secondsString = ` ${seconds}S`} 
+    else if (seconds > 0 && seconds <= 9) {secondsString = ` 0${seconds}S`};
+
+  return `${daysString}${hoursString}${minutesString}${secondsString}`;
+}
+
+
+/**
+ * Генерация случайного числа из диапазона с учетом шага (округлением). Число становится кратно значению шага в меньшую сторону. Например, при шаге "5" вместо "33" будет "30".
+ * @param {number} min — нижняя граница диапазона 
+ * @param {number} max — верхняя граница диапазона
+ * @param {number} step — шаг округления
+ * @return {number} — итоговое округленное число
+ */
+export const getRandomRoundedNumber = (min = 5, max = 123, step = 5) => (
+  (Math.floor(getRandomInteger(min, max) / step)) * step
+);
+
+
+/**
+ * Получение случайного изображения из сервиса "Lorem Picsum". 
+ * @param {number} width — ширина изображения, в пикселях
+ * @param {number} height — высота изображения, в пикселях
+ * @return {string} — значение URL со случайным изображением заданного размера
+ */
+export const getRandomImageUrl = (width = 300, height = 200) => (
+  `https://picsum.photos/${width}/${height}?r=${Math.random()}`
+);
+
+
+/**
+ * Получение случайного логического "true" или "false". 
+ * @return {Boolean} — случайное логическое значение
+ */
+export const gerRandomBoolean = () => (
+  Math.random() >= 0.5
 );

@@ -4,7 +4,7 @@ import { createTripFiltersTemplate } from './view/trip-filters.js';
 import { createTripSortTemplate } from './view/trip-sort.js';
 import { createTripListTemplate } from './view/trip-list.js';
 import { createTripItemTemplate } from './view/trip-item.js';
-import { createEditPointTemplate } from './view/edit-point.js';
+import { createAddNewPointTemplate } from './view/add-new-point.js';
 
 import { getRandomInteger } from './utils/mocks.js';
 import { createTripList } from './mock/trip.js';
@@ -33,7 +33,7 @@ renderTemplate(tripEventsElement, createTripListTemplate());
 
 const tripListElement = document.querySelector('.trip-events__list');
 
-renderTemplate(tripListElement, createEditPointTemplate());
+renderTemplate(tripListElement, createAddNewPointTemplate(pointsList[0]));
 
 pointsList.forEach((point) => {
   renderTemplate(tripListElement, createTripItemTemplate(point));
