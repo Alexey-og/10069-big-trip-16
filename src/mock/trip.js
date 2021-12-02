@@ -10,11 +10,11 @@ import {
   gerRandomBoolean
 } from '../utils/mocks.js';
 
-const pointType = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
+export const pointType = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 
-const destination = ['Paris', 'London', 'Rome', 'Moscow', 'Florence', 'Barcelona', 'Amsterdam', 'Santorini'];
+export const destinationList = ['Paris', 'London', 'Rome', 'Moscow', 'Florence', 'Barcelona', 'Amsterdam', 'Santorini'];
 
-const offers = [
+export const offers = [
   {
     id: 1,
     title: 'Order Uber',
@@ -82,12 +82,12 @@ const description = [
 
 const pictureTitle = [
   'city centre',
-  'embankment',  
+  'embankment',
   'kindergarten',
   'park',
   'central station',
   'zoo'
-]
+];
 
 export const createDescription = () => {
   let eventDescription = '';
@@ -95,19 +95,19 @@ export const createDescription = () => {
     eventDescription += `${getRandomArrayElement(description)} `;
   }
   return eventDescription.trim();
-}
+};
 
 const createOffersArray = () => (
   shuffleArray(offers).slice(0, getRandomInteger(0, 3))
 );
 
 const createPicturesArray = (placeName) => {
-  let pictures = [];
+  const pictures = [];
   for (let i = 0; i < getRandomInteger(0, 6); i++) {
     const pictureItem = {
       src: getRandomImageUrl(),
       description: `${placeName} ${getRandomArrayElement(pictureTitle)}`
-    }
+    };
     pictures.push(pictureItem);
   }
   return pictures;
@@ -115,22 +115,22 @@ const createPicturesArray = (placeName) => {
 
 const createTripPoint = () => {
   const randomDate = getRandomDate(new Date(2022, 12, 30), new Date()).toISOString();
-  const destinationName = getRandomArrayElement(destination);
+  const destinationName = getRandomArrayElement(destinationList);
 
   const tripPoint = {
     id: 0,
     type: getRandomArrayElement(pointType),
-    date_from: randomDate,
-    date_to: dayjs(randomDate).add(getRandomRoundedNumber(), 'm'),
+    dateFrom: randomDate,
+    dateTo: dayjs(randomDate).add(getRandomRoundedNumber(), 'm'),
     destination: {
-        name: destinationName,
-        description: createDescription(),
-        pictures: createPicturesArray()
+      name: destinationName,
+      description: createDescription(),
+      pictures: createPicturesArray(destinationName)
     },
-    base_price: getRandomRoundedNumber(5, 1000, 5),
-    is_favorite: gerRandomBoolean(),
+    basePrice: getRandomRoundedNumber(5, 1000, 5),
+    isFavorite: gerRandomBoolean(),
     offers: createOffersArray(destinationName),
-  }
+  };
 
   return tripPoint;
 };

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-const duration = require('dayjs/plugin/duration');
+import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
 // Функция из интернета по генерации случайного числа из диапазона
@@ -88,9 +88,9 @@ export const getRandomDate = (start, end = new Date()) => (
  * @param {string} format — формат для отображения даты
  * @return {date} — итоговая отформатированная дата
  */
-export const showFormattedTime = (time, format) => {
-  return dayjs(time).format(format);
-};
+export const showFormattedTime = (time, format) => (
+  dayjs(time).format(format)
+);
 
 
 /**
@@ -100,36 +100,36 @@ export const showFormattedTime = (time, format) => {
  * @return {string} — строка с продолжительностью события
  */
 export const showDuration = (startTime, endTime) => {
-  const duration = dayjs(endTime).diff(dayjs(startTime));
-  const days = dayjs.duration(duration).days();
-  const hours = dayjs.duration(duration).hours();
-  const minutes = dayjs.duration(duration).minutes();
-  const seconds = dayjs.duration(duration).seconds();
+  const eventDuration = dayjs(endTime).diff(dayjs(startTime));
+  const days = dayjs.duration(eventDuration).days();
+  const hours = dayjs.duration(eventDuration).hours();
+  const minutes = dayjs.duration(eventDuration).minutes();
+  const seconds = dayjs.duration(eventDuration).seconds();
 
   let daysString = '';
   let hoursString = '';
   let minutesString = '';
   let secondsString = '';
 
-  if (days > 9) {daysString = `${days}D`} 
-    else if (days > 0 && days <= 9) {daysString = `0${days}D`};
+  if (days > 9) {daysString = `${days}D`;}
+  else if (days > 0 && days <= 9) {daysString = `0${days}D`;}
 
-  if (hours > 9) {hoursString = ` ${hours}H`} 
-    else if (hours > 0 && hours <= 9) {hoursString = ` 0${hours}H`};
+  if (hours > 9) {hoursString = ` ${hours}H`;}
+  else if (hours > 0 && hours <= 9) {hoursString = ` 0${hours}H`;}
 
-  if (minutes > 9) {minutesString = ` ${minutes}M`} 
-    else if (minutes > 0 && minutes <= 9) {minutesString = ` 0${minutes}M`};
+  if (minutes > 9) {minutesString = ` ${minutes}M`;}
+  else if (minutes > 0 && minutes <= 9) {minutesString = ` 0${minutes}M`;}
 
-  if (seconds > 9) {secondsString = ` ${seconds}S`} 
-    else if (seconds > 0 && seconds <= 9) {secondsString = ` 0${seconds}S`};
+  if (seconds > 9) {secondsString = ` ${seconds}S`;}
+  else if (seconds > 0 && seconds <= 9) {secondsString = ` 0${seconds}S`;}
 
   return `${daysString}${hoursString}${minutesString}${secondsString}`;
-}
+};
 
 
 /**
  * Генерация случайного числа из диапазона с учетом шага (округлением). Число становится кратно значению шага в меньшую сторону. Например, при шаге "5" вместо "33" будет "30".
- * @param {number} min — нижняя граница диапазона 
+ * @param {number} min — нижняя граница диапазона
  * @param {number} max — верхняя граница диапазона
  * @param {number} step — шаг округления
  * @return {number} — итоговое округленное число
@@ -140,7 +140,7 @@ export const getRandomRoundedNumber = (min = 5, max = 123, step = 5) => (
 
 
 /**
- * Получение случайного изображения из сервиса "Lorem Picsum". 
+ * Получение случайного изображения из сервиса "Lorem Picsum".
  * @param {number} width — ширина изображения, в пикселях
  * @param {number} height — высота изображения, в пикселях
  * @return {string} — значение URL со случайным изображением заданного размера
@@ -151,7 +151,7 @@ export const getRandomImageUrl = (width = 300, height = 200) => (
 
 
 /**
- * Получение случайного логического "true" или "false". 
+ * Получение случайного логического "true" или "false".
  * @return {Boolean} — случайное логическое значение
  */
 export const gerRandomBoolean = () => (
