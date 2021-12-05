@@ -1,9 +1,11 @@
 import { createElement } from '../utils/render.js';
+import { showFormattedTime} from '../utils/mocks.js';
 import {
   pointType,
   destinationList,
   offers
 } from '../mock/trip.js';
+
 
 const createEventTypesTemplate = () => {
   let eventTypes = '';
@@ -49,7 +51,7 @@ const createEventPhotosTemplate = (photos) => {
 
 const createEditPointTemplate = (point) => {
 
-  const {type, destination} = point;
+  const {type, destination, dateFrom, dateTo} = point;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -81,10 +83,10 @@ const createEditPointTemplate = (point) => {
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="19/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${showFormattedTime(dateFrom, 'DD/MM/YY HH:mm')}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="19/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${showFormattedTime(dateTo, 'DD/MM/YY HH:mm')}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
