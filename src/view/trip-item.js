@@ -1,10 +1,10 @@
+import { createElement } from '../utils/render.js';
 import {
   showFormattedTime,
   showDuration
 } from '../utils/mocks.js';
 
-
-export const createTripItemTemplate = (point) => {
+const createTripItemTemplate = (point) => {
   const {type, dateFrom, dateTo, destination, basePrice, offers, isFavorite} = point;
 
   const createOffers = (offersArray) => {
@@ -56,3 +56,28 @@ export const createTripItemTemplate = (point) => {
     </div>
   </li>`;
 };
+
+export default class TripItemView {
+  #element = null;
+  #point = null;
+
+  constructor(point) {
+    this.#point = point;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template() {
+    return createTripItemTemplate(this.#point);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

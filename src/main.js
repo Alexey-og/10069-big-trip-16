@@ -4,10 +4,10 @@ import TripNavigationView from './view/trip-navigation.js';
 import TripFiltersView from './view/trip-filters.js';
 import TripSortView from './view/trip-sort.js';
 import TripListView from './view/trip-list.js';
-import { createTripItemTemplate } from './view/trip-item.js';
-import { createAddNewPointTemplate } from './view/add-new-point.js';
+import TripItemView from './view/trip-item.js';
+import EditPointView from './view/edit-point.js';
 
-import { renderTemplate, renderElement, RenderPosition } from './utils/render.js';
+import { renderElement, RenderPosition } from './utils/render.js';
 import { getRandomInteger } from './utils/mocks.js';
 import { createTripList } from './mock/trip.js';
 
@@ -30,8 +30,8 @@ renderElement(tripEventsElement, new TripListView().element, RenderPosition.BEFO
 
 const tripListElement = document.querySelector('.trip-events__list');
 
-renderTemplate(tripListElement, createAddNewPointTemplate(pointsList[0]));
+renderElement(tripListElement, new EditPointView(pointsList[0]).element, RenderPosition.BEFOREEND);
 
 pointsList.forEach((point) => {
-  renderTemplate(tripListElement, createTripItemTemplate(point));
+  renderElement(tripListElement, new TripItemView(point).element, RenderPosition.BEFOREEND);
 });
