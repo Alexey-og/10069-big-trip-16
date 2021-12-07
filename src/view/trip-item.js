@@ -1,4 +1,4 @@
-import { createElement } from '../utils/render.js';
+import AbstractView from './abstract-view.js';
 import {
   showFormattedTime,
   showDuration
@@ -57,27 +57,15 @@ const createTripItemTemplate = (point) => {
   </li>`;
 };
 
-export default class TripItemView {
-  #element = null;
+export default class TripItemView extends AbstractView {
   #point = null;
 
   constructor(point) {
+    super();
     this.#point = point;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createTripItemTemplate(this.#point);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }
