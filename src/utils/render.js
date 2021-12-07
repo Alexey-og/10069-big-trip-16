@@ -7,6 +7,12 @@ export const RenderPosition = {
   AFTEREND: 'afterend',
 };
 
+export const TripEventsMessage = {
+  EVERYTHING: 'Click New Event to create your first point',
+  PAST: 'There are no past events now',
+  FUTURE: 'There are no future events now',
+};
+
 export const render = (container, element, place) => {
   const parent = container instanceof AbstractView ? container.element : container;
   const child = element instanceof AbstractView ? element.element : element;

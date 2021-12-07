@@ -4,11 +4,13 @@ import TripNavigationView from './view/trip-navigation.js';
 import TripFiltersView from './view/trip-filters.js';
 import TripSortView from './view/trip-sort.js';
 import TripListView from './view/trip-list.js';
+import EmptyListView from './view/empty-list.js';
 import TripItemView from './view/trip-item.js';
 import EditPointView from './view/edit-point.js';
 
 import {
   render,
+  TripEventsMessage,
   RenderPosition,
   replace
 } from './utils/render.js';
@@ -71,11 +73,16 @@ const renderPoint = (pointListElement, point) => {
 render(tripMainElement, new TripInfoView(), RenderPosition.AFTERBEGIN);
 render(tripNavigationElement, new TripNavigationView(), RenderPosition.BEFOREEND);
 render(tripFiltersElement, new TripFiltersView(), RenderPosition.BEFOREEND);
-render(tripEventsElement, new TripSortView(), RenderPosition.AFTERBEGIN);
-render(tripEventsElement, new TripListView(), RenderPosition.BEFOREEND);
 
-const tripListElement = document.querySelector('.trip-events__list');
+if (!pointsList.length) {
+  render(tripEventsElement, new EmptyListView(TripEventsMessage), RenderPosition.BEFOREEND);
+} else {
+  render(tripEventsElement, new TripSortView(), RenderPosition.AFTERBEGIN);
+  render(tripEventsElement, new TripListView(), RenderPosition.BEFOREEND);
 
-pointsList.forEach((point) => {
-  renderPoint(tripListElement, point);
-});
+  const tripListElement = document.querySelector('.trip-events__list');
+
+  pointsList.forEach((point) => {
+    renderPoint(tripListElement, point);
+  });
+}
