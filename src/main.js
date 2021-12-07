@@ -7,7 +7,11 @@ import TripListView from './view/trip-list.js';
 import TripItemView from './view/trip-item.js';
 import EditPointView from './view/edit-point.js';
 
-import { render, RenderPosition } from './utils/render.js';
+import {
+  render,
+  RenderPosition,
+  replace
+} from './utils/render.js';
 import { getRandomInteger } from './utils/mocks.js';
 import { createTripList } from './mock/trip.js';
 
@@ -29,11 +33,11 @@ const renderPoint = (pointListElement, point) => {
   const editFormElement = editPointComponent.element.querySelector('form');
 
   const replacePointToForm = () => {
-    pointListElement.replaceChild(editPointComponent.element, tripItemComponent.element);
+    replace(editPointComponent, tripItemComponent);
   };
 
   const replaceFormToPoint = () => {
-    pointListElement.replaceChild(tripItemComponent.element, editPointComponent.element);
+    replace(tripItemComponent, editPointComponent);
   };
 
   const onEscKeyDown = (evt) => {
@@ -61,14 +65,14 @@ const renderPoint = (pointListElement, point) => {
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
-  render(pointListElement, tripItemComponent.element, RenderPosition.BEFOREEND);
+  render(pointListElement, tripItemComponent, RenderPosition.BEFOREEND);
 };
 
-render(tripMainElement, new TripInfoView().element, RenderPosition.AFTERBEGIN);
-render(tripNavigationElement, new TripNavigationView().element, RenderPosition.BEFOREEND);
-render(tripFiltersElement, new TripFiltersView().element, RenderPosition.BEFOREEND);
-render(tripEventsElement, new TripSortView().element, RenderPosition.AFTERBEGIN);
-render(tripEventsElement, new TripListView().element, RenderPosition.BEFOREEND);
+render(tripMainElement, new TripInfoView(), RenderPosition.AFTERBEGIN);
+render(tripNavigationElement, new TripNavigationView(), RenderPosition.BEFOREEND);
+render(tripFiltersElement, new TripFiltersView(), RenderPosition.BEFOREEND);
+render(tripEventsElement, new TripSortView(), RenderPosition.AFTERBEGIN);
+render(tripEventsElement, new TripListView(), RenderPosition.BEFOREEND);
 
 const tripListElement = document.querySelector('.trip-events__list');
 
