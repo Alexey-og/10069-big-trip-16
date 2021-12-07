@@ -32,8 +32,6 @@ const renderPoint = (pointListElement, point) => {
   const tripItemComponent = new TripItemView(point);
   const editPointComponent = new EditPointView(point);
 
-  const editFormElement = editPointComponent.element.querySelector('form');
-
   const replacePointToForm = () => {
     replace(editPointComponent, tripItemComponent);
   };
@@ -50,19 +48,17 @@ const renderPoint = (pointListElement, point) => {
     }
   };
 
-  tripItemComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+  tripItemComponent.setEditClickHandler(() => {
     replacePointToForm();
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  editFormElement.addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  editPointComponent.setFormSubmitHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown', onEscKeyDown);
   });
 
-  editFormElement.addEventListener('reset', (evt) => {
-    evt.preventDefault();
+  editPointComponent.setFormResetHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown', onEscKeyDown);
   });
