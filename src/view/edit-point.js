@@ -7,47 +7,39 @@ import {
 } from '../mock/trip.js';
 
 
-const createEventTypesTemplate = () => {
-  let eventTypes = '';
-  pointType.forEach((type) => {
-    eventTypes += `<div class="event__type-item">
+const createEventTypesTemplate = () => (
+  pointType.map((type) => (
+    `<div class="event__type-item">
       <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
       <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-1">${type}</label>
-    </div>`;
-  });
-  return eventTypes;
-};
+    </div>`
+  )).join('')
+);
 
-const createDestinationListTemplate = () => {
-  let destinations = '';
-  destinationList.forEach((destination) => {
-    destinations += `<option value='${destination}'></option>`;
-  });
-  return destinations;
-};
+const createDestinationListTemplate = () => (
+  destinationList.map((destination) => (
+    `<option value='${destination}'></option>`
+  )).join('')
+);
 
-const createEventOffersTemplate = () => {
-  let eventOffers = '';
-  offers.forEach((offer) => {
-    eventOffers += `<div class="event__offer-selector">
+const createEventOffersTemplate = () => (
+  offers.map((offer) => (
+    `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}">
       <label class="event__offer-label" for="event-offer-${offer.id}-1">
         <span class="event__offer-title">${offer.title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${offer.price}</span>
       </label>
-    </div>`;
-  });
-  return eventOffers;
-};
+    </div>`
+  )).join('')
+);
 
-const createEventPhotosTemplate = (photos) => {
-  let eventPhotos = '';
-  photos.forEach((photo) => {
-    eventPhotos += `<img class='event__photo' src='${photo.src}' alt='${photo.description}'>`;
-  });
-  return eventPhotos;
-};
+const createEventPhotosTemplate = (photos) => (
+  photos.map((photo) => (
+    `<img class='event__photo' src='${photo.src}' alt='${photo.description}'>`
+  )).join('')
+);
 
 const createEditPointTemplate = (point) => {
 
