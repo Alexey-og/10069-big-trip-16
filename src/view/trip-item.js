@@ -1,4 +1,4 @@
-import { createElement } from '../utils/render.js';
+import AbstractView from './abstract-view.js';
 import {
   showFormattedTime,
   showDuration
@@ -8,20 +8,18 @@ const createTripItemTemplate = (point) => {
   const {type, dateFrom, dateTo, destination, basePrice, offers, isFavorite} = point;
 
   const createOffers = (offersArray) => {
-    let offersList = '';
     if (!offersArray.length) {
       return '';
     }
-    offersArray.forEach(( {title, price} ) => {
-      offersList += `<li class="event__offer">
+    const offersList = offersArray.map(( {title, price} ) => (
+      `<li class="event__offer">
         <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
         <span class="event__offer-price">${price}</span>
-      </li>`;
-    });
-    return `<ul class="event__selected-offers">
-      ${offersList}
-    </ul>`;
+      </li>`
+    )).join('');
+
+    return `<ul class="event__selected-offers">${offersList}</ul>`;
   };
 
   return `<li class="trip-events__item">
@@ -57,27 +55,25 @@ const createTripItemTemplate = (point) => {
   </li>`;
 };
 
-export default class TripItemView {
-  #element = null;
+export default class TripItemView extends AbstractView {
   #point = null;
 
   constructor(point) {
+    super();
     this.#point = point;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
   }
 
   get template() {
     return createTripItemTemplate(this.#point);
   }
 
-  removeElement() {
-    this.#element = null;
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
+  }
+
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 }
