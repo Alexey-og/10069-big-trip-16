@@ -13,6 +13,7 @@ export const TripEventsMessage = {
   FUTURE: 'There are no future events now',
 };
 
+
 export const render = (container, element, place = RenderPosition.BEFOREEND) => {
   const parent = container instanceof AbstractView ? container.element : container;
   const child = element instanceof AbstractView ? element.element : element;

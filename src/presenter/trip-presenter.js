@@ -10,6 +10,14 @@ import {
   RenderPosition,
   updateItem
 } from '../utils/render.js';
+import {
+  sortDay,
+  sortEvent,
+  sortTime,
+  sortPrice,
+  sortOffer
+} from '../utils/event.js';
+import { SortType } from '../utils/const.js';
 
 export default class TripPresenter {
   #tripContainer = null;
@@ -21,6 +29,8 @@ export default class TripPresenter {
 
   #tripEvents = [];
   #eventPresenter = new Map();
+  #currentSortType = SortType.DAY;
+  #sourcedTripEvents = [];
 
   constructor(tripContainer) {
     this.#tripContainer = tripContainer;
@@ -29,6 +39,8 @@ export default class TripPresenter {
   init = (tripEventsMessage, tripEvents) => {
     this.#tripEventsMessage = tripEventsMessage;
     this.#tripEvents = [...tripEvents];
+    this.#sourcedTripEvents = [...tripEvents];
+
     this.#renderEventsList(this.#tripEventsMessage, this.#tripEvents);
   }
 
@@ -38,11 +50,47 @@ export default class TripPresenter {
 
   #handleEventChange = (updatedEvent) => {
     this.#tripEvents = updateItem(this.#tripEvents, updatedEvent);
+    this.#sourcedTripEvents = updateItem(this.#sourcedTripEvents, updatedEvent);
     this.#eventPresenter.get(updatedEvent.id).init(updatedEvent);
+  }
+
+  #sortEvents = (sortType) => {
+    switch (sortType) {
+      case SortType.DAY:
+        this.#tripEvents.sort(sortDay);
+        break;
+      case SortType.EVENT:
+        this.#tripEvents.sort(sortEvent);
+        break;
+      case SortType.TIME:
+        this.#tripEvents.sort(sortTime);
+        break;
+      case SortType.PRICE:
+        this.#tripEvents.sort(sortPrice);
+        break;
+      case SortType.OFFER:
+        this.#tripEvents.sort(sortOffer);
+        break;
+      default:
+        this.#tripEvents = [...this.#sourcedTripEvents];
+    }
+
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortEvents(sortType);
+    this.#clearEventsList();
+    this.#renderEventsList(this.#tripEventsMessage, this.#tripEvents);
   }
 
   #renderSort = () => {
     render(this.#tripContainer, this.#sortComponent, RenderPosition.AFTERBEGIN);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
   }
 
   #renderEventsContainer = () => {
@@ -64,13 +112,13 @@ export default class TripPresenter {
     this.#eventPresenter.set(event.id, eventPresenter);
   };
 
-  #renderEventsList = (tripEventsMessage, tripEvents) => {
-    if (!tripEvents.length) {
+  #renderEventsList = (tripEventsMessage, tripPoints) => {
+    if (!tripPoints.length) {
       this.#renderNoEvents(tripEventsMessage);
     } else {
       this.#renderSort();
       this.#renderEventsContainer();
-      this.#tripEvents.forEach((event) => {
+      tripPoints.forEach((event) => {
         this.#renderEvent(event);
       });
     }

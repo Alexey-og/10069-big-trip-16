@@ -1,11 +1,11 @@
 import AbstractView from './abstract-view.js';
 import {
   showFormattedTime,
-  showDuration
+  showFormattedDuration
 } from '../utils/mocks.js';
 
 const createTripItemTemplate = (point) => {
-  const {type, dateFrom, dateTo, destination, basePrice, offers, isFavorite} = point;
+  const {type, dateFrom, dateTo, duration, destination, basePrice, offers, isFavorite} = point;
 
   const createOffers = (offersArray) => {
     if (!offersArray.length) {
@@ -35,7 +35,7 @@ const createTripItemTemplate = (point) => {
           &mdash;
           <time class="event__end-time" datetime="${showFormattedTime(dateTo, 'YYYY-MM-DD')}T${showFormattedTime(dateTo, 'HH:mm')}">${showFormattedTime(dateTo, 'HH:mm')}</time>
         </p>
-        <p class="event__duration">${showDuration(dateFrom, dateTo)}</p>
+        <p class="event__duration">${showFormattedDuration(duration)}</p>
       </div>
       <p class="event__price">
         &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

@@ -94,17 +94,26 @@ export const showFormattedTime = (time, format) => (
 
 
 /**
+ * Получение длительности между двумя датами
+ * @param {date} startTime — дата начала
+ * @param {date} endTime — дата окончания
+ * @return {date} — итоговая длительность в микросекундах
+ */
+export const getDuration = (startTime, endTime) => (
+  dayjs(endTime).diff(dayjs(startTime))
+);
+
+
+/**
  * Показ отформатированной продолжительности события
- * @param {date} startTime — время начала события
- * @param {date} endTime — время завершения события
+ * @param {integer} time — продолжительность в микросекундах
  * @return {string} — строка с продолжительностью события
  */
-export const showDuration = (startTime, endTime) => {
-  const eventDuration = dayjs(endTime).diff(dayjs(startTime));
-  const days = dayjs.duration(eventDuration).days();
-  const hours = dayjs.duration(eventDuration).hours();
-  const minutes = dayjs.duration(eventDuration).minutes();
-  const seconds = dayjs.duration(eventDuration).seconds();
+export const showFormattedDuration = (time) => {
+  const days = dayjs.duration(time).days();
+  const hours = dayjs.duration(time).hours();
+  const minutes = dayjs.duration(time).minutes();
+  const seconds = dayjs.duration(time).seconds();
 
   let daysString = '';
   let hoursString = '';

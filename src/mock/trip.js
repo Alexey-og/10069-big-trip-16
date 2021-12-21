@@ -6,6 +6,7 @@ import {
   getRandomArrayElement,
   shuffleArray,
   getRandomDate,
+  getDuration,
   getRandomRoundedNumber,
   getRandomImageUrl,
   gerRandomBoolean
@@ -116,13 +117,16 @@ const createPicturesArray = (placeName) => {
 
 const createTripPoint = () => {
   const randomDate = getRandomDate(new Date(2022, 12, 30), new Date()).toISOString();
+  const dateFrom = randomDate;
+  const dateTo = dayjs(randomDate).add(getRandomRoundedNumber(), 'm');
   const destinationName = getRandomArrayElement(destinationList);
 
   const event = {
     id: nanoid(),
     type: getRandomArrayElement(pointType),
-    dateFrom: randomDate,
-    dateTo: dayjs(randomDate).add(getRandomRoundedNumber(), 'm'),
+    dateFrom: dateFrom,
+    dateTo: dateTo,
+    duration: getDuration(dateFrom, dateTo),
     destination: {
       name: destinationName,
       description: createDescription(),
