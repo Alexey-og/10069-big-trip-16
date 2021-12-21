@@ -7,7 +7,8 @@ import EventPresenter from './event-presenter.js';
 import {
   render,
   TripEventsMessage,
-  RenderPosition
+  RenderPosition,
+  updateItem
 } from '../utils/render.js';
 
 export default class TripPresenter {
@@ -19,6 +20,7 @@ export default class TripPresenter {
   #noEventsComponent = new EmptyListView(TripEventsMessage);
 
   #tripEvents = [];
+  #eventPresenter = new Map();
 
   constructor(tripContainer) {
     this.#tripContainer = tripContainer;
@@ -28,6 +30,11 @@ export default class TripPresenter {
     this.#tripEventsMessage = tripEventsMessage;
     this.#tripEvents = [...tripEvents];
     this.#renderEventsList(this.#tripEventsMessage, this.#tripEvents);
+  }
+
+  #handleEventChange = (updatedEvent) => {
+    this.#tripEvents = updateItem(this.#tripEvents, updatedEvent);
+    this.#eventPresenter.get(updatedEvent.id).init(updatedEvent);
   }
 
   #renderSort = () => {
@@ -42,9 +49,15 @@ export default class TripPresenter {
     render(this.#tripContainer, this.#noEventsComponent);
   }
 
-  #renderEvent = (eventsContainer, event) => {
-    const eventPresenter = new EventPresenter(eventsContainer);
+  #clearEventsList = () => {
+    this.#eventPresenter.forEach((presenter) => presenter.destroy());
+    this.#eventPresenter.clear();
+  }
+
+  #renderEvent = (event) => {
+    const eventPresenter = new EventPresenter(this.#eventsContainerComponent, this.#handleEventChange);
     eventPresenter.init(event);
+    this.#eventPresenter.set(event.id, eventPresenter);
   };
 
   #renderEventsList = (tripEventsMessage, tripEvents) => {
@@ -54,7 +67,7 @@ export default class TripPresenter {
       this.#renderSort();
       this.#renderEventsContainer();
       this.#tripEvents.forEach((event) => {
-        this.#renderEvent(this.#eventsContainerComponent, event);
+        this.#renderEvent(event);
       });
     }
   }

@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 
 import {
   getRandomInteger,
@@ -117,8 +118,8 @@ const createTripPoint = () => {
   const randomDate = getRandomDate(new Date(2022, 12, 30), new Date()).toISOString();
   const destinationName = getRandomArrayElement(destinationList);
 
-  const tripPoint = {
-    id: 0,
+  const event = {
+    id: nanoid(),
     type: getRandomArrayElement(pointType),
     dateFrom: randomDate,
     dateTo: dayjs(randomDate).add(getRandomRoundedNumber(), 'm'),
@@ -132,7 +133,7 @@ const createTripPoint = () => {
     offers: createOffersArray(destinationName),
   };
 
-  return tripPoint;
+  return event;
 };
 
 export const createTripList = (quantity) => (
