@@ -13,7 +13,8 @@ export const TripEventsMessage = {
   FUTURE: 'There are no future events now',
 };
 
-export const render = (container, element, place) => {
+
+export const render = (container, element, place = RenderPosition.BEFOREEND) => {
   const parent = container instanceof AbstractView ? container.element : container;
   const child = element instanceof AbstractView ? element.element : element;
 
@@ -68,4 +69,18 @@ export const remove = (component) => {
 
   component.element.remove();
   component.removeElement();
+};
+
+export const updateItem = (items, update) => {
+  const index = items.findIndex((item) => item.id === update.id);
+
+  if (index === -1) {
+    return items;
+  }
+
+  return [
+    ...items.slice(0, index),
+    update,
+    ...items.slice(index + 1),
+  ];
 };

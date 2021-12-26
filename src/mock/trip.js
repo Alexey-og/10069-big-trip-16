@@ -1,10 +1,12 @@
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 
 import {
   getRandomInteger,
   getRandomArrayElement,
   shuffleArray,
   getRandomDate,
+  getDuration,
   getRandomRoundedNumber,
   getRandomImageUrl,
   gerRandomBoolean
@@ -115,13 +117,16 @@ const createPicturesArray = (placeName) => {
 
 const createTripPoint = () => {
   const randomDate = getRandomDate(new Date(2022, 12, 30), new Date()).toISOString();
+  const dateFrom = randomDate;
+  const dateTo = dayjs(randomDate).add(getRandomRoundedNumber(), 'm');
   const destinationName = getRandomArrayElement(destinationList);
 
-  const tripPoint = {
-    id: 0,
+  const event = {
+    id: nanoid(),
     type: getRandomArrayElement(pointType),
-    dateFrom: randomDate,
-    dateTo: dayjs(randomDate).add(getRandomRoundedNumber(), 'm'),
+    dateFrom: dateFrom,
+    dateTo: dateTo,
+    duration: getDuration(dateFrom, dateTo),
     destination: {
       name: destinationName,
       description: createDescription(),
@@ -132,7 +137,7 @@ const createTripPoint = () => {
     offers: createOffersArray(destinationName),
   };
 
-  return tripPoint;
+  return event;
 };
 
 export const createTripList = (quantity) => (
