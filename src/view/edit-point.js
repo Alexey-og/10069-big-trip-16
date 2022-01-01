@@ -1,4 +1,4 @@
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view.js';
 import { showFormattedTime} from '../utils/mocks.js';
 import {
   pointType,
@@ -116,7 +116,7 @@ const createEditPointTemplate = (point) => {
   </li>`;
 };
 
-export default class EditPointView extends AbstractView {
+export default class EditPointView extends SmartView {
   #event = null;
 
   constructor(event) {
@@ -126,6 +126,10 @@ export default class EditPointView extends AbstractView {
 
   get template() {
     return createEditPointTemplate(this.#event);
+  }
+
+  restoreHandlers = () => {
+
   }
 
   #formSubmitHandler = (evt) => {
