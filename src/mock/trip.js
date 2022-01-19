@@ -9,10 +9,6 @@ import {
   gerRandomBoolean
 } from '../utils/mocks.js';
 
-import {
-  capitalizeWord
-} from '../utils/event.js';
-
 export const destinations = [{
   name: 'Chamonix',
   description: 'Chamonix, is a beautiful city, middle-eastern paradise, with an embankment of a mighty river as a centre of attraction.',
@@ -773,18 +769,13 @@ export const offers = [{
   }]
 }];
 
-export const pointTypesList = offers.map((offer) => capitalizeWord(offer.type));
+export const pointTypesList = offers.map((offer) => offer.type);
 export const destinationList = destinations.map((point) => point.name);
 
-export const createOffersArray = (offerType = offers[0].type) => {
-  let offersList = [];
-  offers.forEach((offer) => {
-    if (offerType.toLowerCase() === offer.type.toLowerCase()) {
-      offersList = offer.offers;
-    }
-  });
-  return offersList;
-};
+export const createOffersArray = (offerType = offers[0].type) => (
+  (offers.find((offer) => offerType === offer.type)
+  ).offers
+);
 
 const createTripPoint = () => {
   const randomDate = getRandomDate(new Date(2022, 12, 30), new Date()).toISOString();
@@ -792,17 +783,9 @@ const createTripPoint = () => {
   const dateTo = dayjs(randomDate).add(getRandomRoundedNumber(), 'm');
   const pointName = getRandomArrayElement(destinationList);
   const pointType = getRandomArrayElement(pointTypesList);
-  let pointDescription = '';
-  let pointPictures = [];
+  const pointInfo = destinations.find((point) => pointName === point.name);
 
-  destinations.forEach((point) => {
-    if (pointName === point.name) {
-      pointDescription = point.description;
-      pointPictures = point.pictures;
-    }
-  });
-
-  const event = {
+  return {
     id: nanoid(),
     type: pointType,
     dateFrom: dateFrom,
@@ -810,15 +793,13 @@ const createTripPoint = () => {
     duration: getDuration(dateFrom, dateTo),
     destination: {
       name: pointName,
-      description: pointDescription,
-      pictures: pointPictures,
+      description: pointInfo.description,
+      pictures: pointInfo.pictures,
     },
     basePrice: getRandomRoundedNumber(5, 1000, 5),
     isFavorite: gerRandomBoolean(),
     offers: createOffersArray(pointType),
   };
-
-  return event;
 };
 
 export const createTripList = (quantity) => (
