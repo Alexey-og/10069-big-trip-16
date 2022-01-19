@@ -47,3 +47,10 @@ export const sortOffer = (eventA, eventB) => {
   }
   return 0;
 };
+
+export const capitalizeWord = (word) => {
+  if (typeof word !== 'string') {
+    return '';
+  }
+  return word.charAt(0).toUpperCase() + word.slice(1);
+};

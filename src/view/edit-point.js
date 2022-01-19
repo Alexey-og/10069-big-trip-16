@@ -1,14 +1,14 @@
 import SmartView from './smart-view.js';
 import { showFormattedTime} from '../utils/mocks.js';
 import {
-  pointType,
+  pointTypesList,
   destinationList,
-  offers
+  createOffersArray
 } from '../mock/trip.js';
 
 
 const createEventTypesTemplate = () => (
-  pointType.map((type) => (
+  pointTypesList.map((type) => (
     `<div class="event__type-item">
       <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type.toLowerCase()}">
       <label class="event__type-label  event__type-label--${type.toLowerCase()}" for="event-type-${type.toLowerCase()}-1">${type}</label>
@@ -22,8 +22,8 @@ const createDestinationListTemplate = () => (
   )).join('')
 );
 
-const createEventOffersTemplate = () => (
-  offers.map((offer) => (
+const createEventOffersTemplate = (type) => (
+  createOffersArray(type).map((offer) => (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}">
       <label class="event__offer-label" for="event-offer-${offer.id}-1">
@@ -97,7 +97,7 @@ const createEditPointTemplate = (point) => {
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
-            ${createEventOffersTemplate()}
+            ${createEventOffersTemplate(type)}
           </div>
         </section>
 
