@@ -772,6 +772,11 @@ export const offers = [{
 export const pointTypesList = offers.map((offer) => offer.type);
 export const destinationList = destinations.map((point) => point.name);
 
+
+export const createPointInfo = (pointName) => (
+  destinations.find((point) => pointName === point.name)
+);
+
 export const createOffersArray = (offerType = offers[0].type) => (
   (offers.find((offer) => offerType === offer.type)
   ).offers
@@ -781,24 +786,20 @@ const createTripPoint = () => {
   const randomDate = getRandomDate(new Date(2022, 12, 30), new Date()).toISOString();
   const dateFrom = randomDate;
   const dateTo = dayjs(randomDate).add(getRandomRoundedNumber(), 'm');
-  const pointName = getRandomArrayElement(destinationList);
   const pointType = getRandomArrayElement(pointTypesList);
-  const pointInfo = destinations.find((point) => pointName === point.name);
+  const pointName = getRandomArrayElement(destinationList);
 
   return {
     id: nanoid(),
     type: pointType,
+    pointName: pointName,
     dateFrom: dateFrom,
     dateTo: dateTo,
     duration: getDuration(dateFrom, dateTo),
-    destination: {
-      name: pointName,
-      description: pointInfo.description,
-      pictures: pointInfo.pictures,
-    },
+    destination: createPointInfo(pointName),
     basePrice: getRandomRoundedNumber(5, 1000, 5),
     isFavorite: gerRandomBoolean(),
-    offers: createOffersArray(pointType),
+    offers: createOffersArray(pointType)
   };
 };
 

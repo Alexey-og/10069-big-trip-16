@@ -3,7 +3,8 @@ import { showFormattedTime} from '../utils/mocks.js';
 import {
   pointTypesList,
   destinationList,
-  createOffersArray
+  createOffersArray,
+  createPointInfo
 } from '../mock/trip.js';
 import { capitalizeWord } from '../utils/event.js';
 
@@ -22,8 +23,12 @@ const createDestinationListTemplate = () => (
   )).join('')
 );
 
-const createEventOffersTemplate = (type) => (
-  createOffersArray(type).map((offer) => (
+const createEventOffersTemplate = (type) => {
+  const offersArray = createOffersArray(type);
+  if (!offersArray.length) {
+    return '';
+  }
+  const offersList = offersArray.map((offer) => (
     `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}-1" type="checkbox" name="event-offer-${offer.id}">
       <label class="event__offer-label" for="event-offer-${offer.id}-1">
@@ -32,18 +37,39 @@ const createEventOffersTemplate = (type) => (
         <span class="event__offer-price">${offer.price}</span>
       </label>
     </div>`
-  )).join('')
-);
+  )).join('');
+  return `<section class="event__section  event__section--offers">
+    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+    <div class="event__available-offers">${offersList}</div>
+  </section>`;
+};
 
-const createEventPhotosTemplate = (photos) => (
-  photos.map((photo) => (
-    `<img class='event__photo' src='${photo.src}' alt='${photo.description}'>`
-  )).join('')
-);
+const createEventPhotosTemplate = (photos) => {
+  if (!photos.length) {
+    return '';
+  }
+  const photoList = photos.map((photo) => (`<img class='event__photo' src='${photo.src}' alt='${photo.description}'>`)).join('');
+  return `<div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${photoList}
+    </div>
+  </div>`;
+};
+
+const createPointInfoTemplate = (pointName) => {
+  const pointInfo = createPointInfo(pointName);
+  if (!pointInfo.description.length && !pointInfo.pictures.length) {
+    return '';
+  }
+  return `<section class="event__section  event__section--destination">
+  <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+  ${pointInfo.description.length ? `<p class="event__destination-description">${pointInfo.description}</p>` : ''}
+  ${createEventPhotosTemplate(pointInfo.pictures)}
+  </section>`;
+};
 
 const createEditPointTemplate = (point) => {
-
-  const {type, destination, dateFrom, dateTo} = point;
+  const {type, pointName, dateFrom, dateTo} = point;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -65,7 +91,7 @@ const createEditPointTemplate = (point) => {
 
         <div class="event__field-group  event__field-group--destination">
           <label class="event__label  event__type-output" for="event-destination-1">${type}</label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${pointName}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${createDestinationListTemplate()}
           </datalist>
@@ -89,26 +115,14 @@ const createEditPointTemplate = (point) => {
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Cancel</button>
+        <button class="event__rollup-btn" type="button">
+          <span class="visually-hidden">Close event</span>
+        </button>
+
       </header>
       <section class="event__details">
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-          <div class="event__available-offers">
-            ${createEventOffersTemplate(type)}
-          </div>
-        </section>
-
-        <section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination.description}</p>
-
-          <div class="event__photos-container">
-            <div class="event__photos-tape">
-              ${createEventPhotosTemplate(destination.pictures)}
-            </div>
-          </div>
-        </section>
+        ${createEventOffersTemplate(type)}
+        ${createPointInfoTemplate(pointName)}
       </section>
     </form>
   </li>`;
@@ -129,14 +143,22 @@ export default class EditPointView extends SmartView {
 
   restoreHandlers = () => {
     this.#setInnerHandlers();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setFormResetHandler(this._callback.formReset);
   }
 
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-list').addEventListener('change', this.#typeChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#pointChangeHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formResetHandler);
   }
 
   #typeChangeHandler = (evt) => {
     this.updateData( {type: evt.target.value} );
+  }
+
+  #pointChangeHandler = (evt) => {
+    this.updateData( {pointName: evt.target.value} );
   }
 
   #formSubmitHandler = (evt) => {
@@ -158,4 +180,5 @@ export default class EditPointView extends SmartView {
     this._callback.formReset = callback;
     this.element.querySelector('form').addEventListener('reset', this.#formResetHandler);
   }
+
 }
