@@ -7,6 +7,9 @@ import {
   createPointInfo
 } from '../mock/trip.js';
 import { capitalizeWord } from '../utils/event.js';
+import flatpickr from 'flatpickr';
+
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
   id: '',
@@ -145,14 +148,33 @@ const createEditPointTemplate = (data) => {
 };
 
 export default class EditPointView extends SmartView {
+  #datepickerDateFrom = null;
+  #datepickerDateTo = null;
+
   constructor(event = BLANK_POINT) {
     super();
     this._data = EditPointView.parsePointToData(event);
     this.#setInnerHandlers();
+    this.#setDatepickerDateFrom();
+    this.#setDatepickerDateTo();
   }
 
   get template() {
     return createEditPointTemplate(this._data);
+  }
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepickerDateFrom) {
+      this.#datepickerDateFrom.destroy();
+      this.#datepickerDateFrom = null;
+    }
+
+    if (this.#datepickerDateTo) {
+      this.#datepickerDateTo.destroy();
+      this.#datepickerDateTo = null;
+    }
   }
 
   static parsePointToData = (point) => ({...point});
@@ -164,8 +186,46 @@ export default class EditPointView extends SmartView {
 
   restoreHandlers = () => {
     this.#setInnerHandlers();
+    this.#setDatepickerDateFrom();
+    this.#setDatepickerDateTo();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setFormResetHandler(this._callback.formReset);
+  }
+
+  #setDatepickerDateFrom = () => {
+    this.#datepickerDateFrom = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        defaultDate: this._data.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+      },
+    );
+  }
+
+  #setDatepickerDateTo = () => {
+    this.#datepickerDateTo = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        defaultDate: this._data.dateTo,
+        onChange: this.#dateToChangeHandler,
+      },
+    );
+  }
+
+  #dateFromChangeHandler = ([userDateFrom]) => {
+    this.updateData({
+      dateFrom: userDateFrom,
+    });
+  }
+
+  #dateToChangeHandler = ([userDateTo]) => {
+    this.updateData({
+      dateTo: userDateTo,
+    });
   }
 
   #setInnerHandlers = () => {
