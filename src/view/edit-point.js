@@ -10,7 +10,7 @@ import { capitalizeWord } from '../utils/event.js';
 const createEventTypesTemplate = () => (
   pointTypesList.map((type) => (
     `<div class="event__type-item">
-      <input id="event-type-taxi-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
+      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
       <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${capitalizeWord(type)}</label>
     </div>`
   )).join('')
@@ -64,9 +64,7 @@ const createEditPointTemplate = (point) => {
         </div>
 
         <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-1">
-          ${type}
-          </label>
+          <label class="event__label  event__type-output" for="event-destination-1">${type}</label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${createDestinationListTemplate()}
@@ -117,24 +115,33 @@ const createEditPointTemplate = (point) => {
 };
 
 export default class EditPointView extends SmartView {
-  #event = null;
-
   constructor(event) {
     super();
-    this.#event = event;
+    this._data = EditPointView.parsePointToData(event);
+    this.#setInnerHandlers();
   }
 
   get template() {
-    return createEditPointTemplate(this.#event);
+    return createEditPointTemplate(this._data);
   }
 
-  restoreHandlers = () => {
+  static parsePointToData = (point) => ({...point });
 
+  restoreHandlers = () => {
+    this.#setInnerHandlers();
+  }
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__type-list').addEventListener('change', this.#typeChangeHandler);
+  }
+
+  #typeChangeHandler = (evt) => {
+    this.updateData( {type: evt.target.value} );
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(this.#event);
+    this._callback.formSubmit(this._data);
   }
 
   #formResetHandler = (evt) => {
