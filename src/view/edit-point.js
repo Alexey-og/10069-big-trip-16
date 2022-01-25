@@ -8,6 +8,22 @@ import {
 } from '../mock/trip.js';
 import { capitalizeWord } from '../utils/event.js';
 
+const BLANK_POINT = {
+  id: '',
+  type: '',
+  pointName: '',
+  dateFrom: '',
+  dateTo: '',
+  duration: '',
+  destination: {
+    name: '',
+    description: '',
+    pictures: []
+  },
+  basePrice: '',
+  offers: []
+};
+
 const createEventTypesTemplate = () => (
   pointTypesList.map((type) => (
     `<div class="event__type-item">
@@ -68,8 +84,8 @@ const createPointInfoTemplate = (pointName) => {
   </section>`;
 };
 
-const createEditPointTemplate = (point) => {
-  const {type, pointName, dateFrom, dateTo} = point;
+const createEditPointTemplate = (data) => {
+  const {type, pointName, dateFrom, dateTo} = data;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -129,7 +145,7 @@ const createEditPointTemplate = (point) => {
 };
 
 export default class EditPointView extends SmartView {
-  constructor(event) {
+  constructor(event = BLANK_POINT) {
     super();
     this._data = EditPointView.parsePointToData(event);
     this.#setInnerHandlers();
@@ -139,7 +155,12 @@ export default class EditPointView extends SmartView {
     return createEditPointTemplate(this._data);
   }
 
-  static parsePointToData = (point) => ({...point });
+  static parsePointToData = (point) => ({...point});
+  static parseDataToPoint = (data) => ({...data});
+
+  reset = (point) => {
+    this.updateData(EditPointView.parsePointToData(point),);
+  }
 
   restoreHandlers = () => {
     this.#setInnerHandlers();
@@ -163,7 +184,7 @@ export default class EditPointView extends SmartView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this._callback.formSubmit(this._data);
+    this._callback.formSubmit(EditPointView.parseDataToPoint(this._data));
   }
 
   #formResetHandler = (evt) => {
