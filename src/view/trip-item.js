@@ -5,7 +5,7 @@ import {
 } from '../utils/mocks.js';
 
 const createTripItemTemplate = (point) => {
-  const {type, dateFrom, dateTo, duration, destination, basePrice, offers, isFavorite} = point;
+  const {type, dateFrom, dateTo, duration, pointName, basePrice, offers, isFavorite} = point;
 
   const createOffers = (offersArray) => {
     if (!offersArray.length) {
@@ -28,7 +28,7 @@ const createTripItemTemplate = (point) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${destination.name}</h3>
+      <h3 class="event__title">${type} ${pointName}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${showFormattedTime(dateFrom, 'YYYY-MM-DD')}T${showFormattedTime(dateFrom, 'HH:mm')}">${showFormattedTime(dateFrom, 'HH:mm')}</time>

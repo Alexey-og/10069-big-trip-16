@@ -88,7 +88,7 @@ const createPointInfoTemplate = (pointName) => {
 };
 
 const createEditPointTemplate = (data) => {
-  const {type, pointName, dateFrom, dateTo} = data;
+  const {type, pointName, dateFrom, dateTo, basePrice} = data;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -129,7 +129,7 @@ const createEditPointTemplate = (data) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -231,6 +231,7 @@ export default class EditPointView extends SmartView {
   #setInnerHandlers = () => {
     this.element.querySelector('.event__type-list').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#pointChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formResetHandler);
   }
 
@@ -240,6 +241,10 @@ export default class EditPointView extends SmartView {
 
   #pointChangeHandler = (evt) => {
     this.updateData( {pointName: evt.target.value} );
+  }
+
+  #priceChangeHandler = (evt) => {
+    this.updateData( {basePrice: evt.target.value} );
   }
 
   #formSubmitHandler = (evt) => {
